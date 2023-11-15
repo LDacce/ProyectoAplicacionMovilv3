@@ -33,7 +33,7 @@
         android:layout_margin="4dp"
         android:layout_below="@+id/trackTitle"
 
-        tools:listitem="@layout/item_rv_pedidos"/>
+        tools:listitem="@layout/item_rv_order_events"/>
 
     <Button
         android:id="@+id/button_test"

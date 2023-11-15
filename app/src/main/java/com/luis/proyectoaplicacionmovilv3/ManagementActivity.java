@@ -16,7 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.luis.proyectoaplicacionmovilv3.adapters.EventAdapter;
+import com.luis.proyectoaplicacionmovilv3.adapters.EventListAdapter;
 import com.luis.proyectoaplicacionmovilv3.api.MasterApiClient;
 
 import com.luis.proyectoaplicacionmovilv3.models.EventModel;
@@ -72,7 +72,7 @@ public class ManagementActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     // La llamada fue exitosa, establecer la respuesta en el spinner
                     List<EventModel> eventList = response.body();
-                    EventAdapter adapter = new EventAdapter(getBaseContext(),
+                    EventListAdapter adapter = new EventListAdapter(getBaseContext(),
                             android.R.layout.simple_spinner_item,eventList); //
                     // Utiliza tu EventAdapter personalizado
                     eventsComboBox.setAdapter(adapter);

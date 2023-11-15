@@ -9,31 +9,31 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.luis.proyectoaplicacionmovilv3.R;
-import com.luis.proyectoaplicacionmovilv3.models.Pedido;
+import com.luis.proyectoaplicacionmovilv3.models.OrderModel;
 
 import java.util.List;
 
 //djijwiejweiwjeiwjeweiwjiewjiejwiewjie
-public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.ViewHolder> {
+public class OrderEventListAdapter extends RecyclerView.Adapter<OrderEventListAdapter.ViewHolder> {
 
-    List<Pedido> listaPedidos;
+    List<OrderModel> listaOrderModels;
 
-    public PedidosAdapter(List<Pedido> listaPedidos){
-        this.listaPedidos = listaPedidos;
+    public OrderEventListAdapter(List<OrderModel> listaOrderModels){
+        this.listaOrderModels = listaOrderModels;
     }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View vista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_pedidos, parent,false);
+        View vista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rv_order_events, parent,false);
         return new ViewHolder(vista);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Pedido pedido = listaPedidos.get(position);
+        OrderModel orderModel = listaOrderModels.get(position);
 
-        holder.nroPedido_text.setText(pedido.nroPedido.toUpperCase());
-        holder.evento_text.setText(pedido.eventPedido.toUpperCase());
+        holder.nroPedido_text.setText(orderModel.nroPedido.toUpperCase());
+        holder.evento_text.setText(orderModel.eventPedido.toUpperCase());
 
 
 
@@ -41,7 +41,7 @@ public class PedidosAdapter extends RecyclerView.Adapter<PedidosAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return listaPedidos.size();
+        return listaOrderModels.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

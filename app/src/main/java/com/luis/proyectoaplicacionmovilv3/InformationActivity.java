@@ -13,8 +13,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.luis.proyectoaplicacionmovilv3.models.Pedido;
-import com.luis.proyectoaplicacionmovilv3.adapters.PedidosAdapter;
+import com.luis.proyectoaplicacionmovilv3.models.OrderModel;
+import com.luis.proyectoaplicacionmovilv3.adapters.OrderEventListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +23,11 @@ import java.util.List;
 public class InformationActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    List<Pedido> pList;
-    PedidosAdapter pedidossAdapterr;
+    List<OrderModel> pList;
+    OrderEventListAdapter pedidossAdapterr;
     //
-    List<Pedido> listaPedido = new ArrayList<>();
-    PedidosAdapter pedidosAdapter = new PedidosAdapter(listaPedido);
+    List<OrderModel> listaOrderModel = new ArrayList<>();
+    OrderEventListAdapter orderEventListAdapter = new OrderEventListAdapter(listaOrderModel);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,12 +54,12 @@ public class InformationActivity extends AppCompatActivity {
         });
 
         pList = new ArrayList<>();
-        pList.add(new Pedido("2222222","FUERE DE ARE","NNII"));
-        pList.add(new Pedido("2222222","FUERE DE ARE","NII"));
-        pList.add(new Pedido("2222222","FUERE DE ARE","NIII"));
+        pList.add(new OrderModel("2222222","FUERE DE ARE","NNII"));
+        pList.add(new OrderModel("2222222","FUERE DE ARE","NII"));
+        pList.add(new OrderModel("2222222","FUERE DE ARE","NIII"));
 
         recyclerView = findViewById(R.id.recycler_finalizados);
-        pedidossAdapterr = new PedidosAdapter(pList);
+        pedidossAdapterr = new OrderEventListAdapter(pList);
         recyclerView.setAdapter(pedidossAdapterr);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

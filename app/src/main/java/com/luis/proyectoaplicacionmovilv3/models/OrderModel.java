@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 
 
-public class Pedido {
+public class OrderModel {
     @NonNull
 
     public String nroPedido;
@@ -13,7 +13,7 @@ public class Pedido {
 
     public String empresaPedido;
 
-    public Pedido(@NonNull String nroPedido, String eventPedido, String empresaPedido) {
+    public OrderModel(@NonNull String nroPedido, String eventPedido, String empresaPedido) {
         this.nroPedido = nroPedido;
         this.eventPedido = eventPedido;
         this.empresaPedido = empresaPedido;

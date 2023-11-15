@@ -12,10 +12,10 @@ import com.luis.proyectoaplicacionmovilv3.models.EventModel;
 import java.util.List;
 
 
-public class EventAdapter extends ArrayAdapter<EventModel> {
+public class EventListAdapter extends ArrayAdapter<EventModel> {
     private List<EventModel> eventList;
 
-    public EventAdapter(Context context, int resource, List<EventModel> eventList) {
+    public EventListAdapter(Context context, int resource, List<EventModel> eventList) {
         super(context, resource, eventList);
         this.eventList = eventList;
     }
