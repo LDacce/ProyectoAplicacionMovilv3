@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Cambiar estos colores -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="morado">#9C27B0</color>
+    <color name="gris">#919191</color>
+    <color name="azul">#3F51B5</color>
+
+    <!-- Dark Colors -->
+    <color name="color_primary">#1A69E3</color>
+    <color name="color_primary_contrast">#ffffff</color>
+    <color name="color_primary_shade">#1e4ac4</color>
+    <color name="color_primary_tint">#147cf5</color>
+
+    <color name="color_secondary">#50c8ff</color>
+    <color name="color_secondary_contrast">#ffffff</color>
+    <color name="color_secondary_shade">#46b0e0</color>
+    <color name="color_secondary_tint">#62ceff</color>
+
+    <color name="color_tertiary">#6a64ff</color>
+    <color name="color_tertiary_contrast">#ffffff</color>
+    <color name="color_tertiary_shade">#5d58e0</color>
+    <color name="color_tertiary_tint">#7974ff</color>
+
+    <color name="color_success">#2fdf75</color>
+    <color name="color_success_contrast">#000000</color>
+    <color name="color_success_shade">#29c467</color>
+    <color name="color_success_tint">#44e283</color>
+
+    <color name="color_warning">#ffd534</color>
+    <color name="color_warning_contrast">#000000</color>
+    <color name="color_warning_shade">#e0bb2e</color>
+    <color name="color_warning_tint">#ffd948</color>
+
+    <color name="color_danger">#ff4961</color>
+    <color name="color_danger_contrast">#ffffff</color>
+    <color name="color_danger_shade">#e04055</color>
+    <color name="color_danger_tint">#ff5b71</color>
+
+    <color name="color_dark">#f4f5f8</color>
+    <color name="color_dark_contrast">#000000</color>
+    <color name="color_dark_shade">#d7d8da</color>
+    <color name="color_dark_tint">#f5f6f9</color>
+
+    <color name="color_medium">#989aa2</color>
+    <color name="color_medium_contrast">#000000</color>
+    <color name="color_medium_shade">#86888f</color>
+    <color name="color_medium_tint">#a2a4ab</color>
+
+    <color name="color_light">#222428</color>
+    <color name="color_light_contrast">#ffffff</color>
+    <color name="color_light_shade">#1e2023</color>
+    <color name="color_light_tint">#383a3e</color>
+
+    <!-- Material Design Dark Theme -->
+    <color name="md_background_color">#121212</color>
+    <color name="md_text_color">#ffffff</color>
+    <color name="md_border_color">#222222</color>
+    <color name="md_color_step_50">#1e1e1e</color>
+    <color name="md_color_step_100">#2a2a2a</color>
+    <color name="md_color_step_150">#363636</color>
+    <color name="md_color_step_200">#414141</color>
+    <color name="md_color_step_250">#4d4d4d</color>
+    <color name="md_color_step_300">#595959</color>
+    <color name="md_color_step_350">#656565</color>
+    <color name="md_color_step_400">#717171</color>
+    <color name="md_color_step_450">#7d7d7d</color>
+    <color name="md_color_step_500">#898989</color>
+    <color name="md_color_step_550">#949494</color>
+    <color name="md_color_step_600">#a0a0a0</color>
+    <color name="md_color_step_650">#acacac</color>
+    <color name="md_color_step_700">#b8b8b8</color>
+    <color name="md_color_step_750">#c4c4c4</color>
+    <color name="md_color_step_800">#d0d0d0</color>
+    <color name="md_color_step_850">#dbdbdb</color>
+    <color name="md_color_step_900">#e7e7e7</color>
+    <color name="md_color_step_950">#f3f3f3</color>
+    <color name="md_item_background">#1e1e1e</color>
+    <color name="md_toolbar_background">#1f1f1f</color>
+    <color name="md_tab_bar_background">#1f1f1f</color>
+    <color name="md_card_background">#1e1e1e</color>
+
+</resources>
