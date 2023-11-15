@@ -39,4 +39,8 @@ public class OrderApiClient {
         }
         return service;
     }
+    //prueba
+    public void OrderApiClientest() {
+            //Constructor privado para evitar la creación de instancias fuera de la clase
+        }
 }
