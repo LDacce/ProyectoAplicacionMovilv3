@@ -1,6 +1,17 @@
 <resources>
     <string name="app_name">ProyectoAplicacionMovilv3</string>
 
+    <string-array name="datos_spinner_empresa">
+        <item>Empresa</item>
+        <item>NATURA</item>
+        <item>MARY KAY</item>
+        <item>ZONIA</item>
+        <item>BELCORP</item>
+        <item>BE ZIFRAH</item>
+        <item>BAGUES</item>
+        <item>TU CALZADO</item>
+    </string-array>
+
 
 
 

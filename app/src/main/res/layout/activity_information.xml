@@ -23,9 +23,6 @@
 
 
 
-
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_finalizados"
         android:layout_width="match_parent"
