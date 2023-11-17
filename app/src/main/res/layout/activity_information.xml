@@ -4,39 +4,205 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InformationActivity"
-    >
-    <TextView
-        android:id="@+id/infoTitle"
+    android:background="@color/black"
+    tools:context=".InformationActivity">
+
+    <RelativeLayout
+        android:id="@+id/consultora_relative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Informacion del Pedido"/>
+        android:layout_margin="2dp"
+        android:background="@color/cardview_dark_background"
+        android:padding="4dp">
 
+        <ImageView
+            android:id="@+id/image_consultora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/icon_consultora" />
 
+        <TextView
+            android:id="@+id/consultora_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/image_consultora"
+            android:layout_marginStart="32dp"
+            android:layout_toEndOf="@+id/image_consultora"
+            android:text="Consultora"
+            android:textColor="@color/white"
+            android:textSize="18dp" />
 
-    <TextView
-        android:id="@+id/trackTitle"
+        <TextView
+            android:id="@+id/consultora_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/image_consultora"
+            android:layout_alignBottom="@+id/image_consultora"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/white"
+            android:text="Consultora ABC" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/contacto_relative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/infoTitle"
-        android:text="Eventos del Pedido"/>
+        android:layout_margin="2dp"
+        android:padding="4dp"
+        android:background="@color/cardview_dark_background"
+        android:layout_below="@+id/consultora_relative">
 
+        <ImageView
+            android:id="@+id/image_contacto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/icon_contacto"/>
+
+        <TextView
+            android:id="@+id/contacto_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/image_contacto"
+            android:layout_toEndOf="@+id/image_contacto"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/white"
+            android:text="Nro Contacto"/>
+
+        <TextView
+            android:id="@+id/contacto_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/image_contacto"
+            android:layout_alignBottom="@+id/image_contacto"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/white"
+            android:text="N contacto"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/pieza_relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:padding="4dp"
+        android:background="@color/cardview_dark_background"
+        android:layout_below="@+id/contacto_relative">
+
+        <ImageView
+            android:id="@+id/image_pieza"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/icon_pieza"/>
+
+        <TextView
+            android:id="@+id/pieza_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/image_pieza"
+            android:layout_toEndOf="@+id/image_pieza"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/white"
+            android:text="Nro Pieza"/>
+
+        <TextView
+            android:id="@+id/pieza_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/image_pieza"
+            android:layout_toEndOf="@+id/image_pieza"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/white"
+            android:text="111"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/direccion_relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:padding="4dp"
+        android:background="@color/cardview_dark_background"
+        android:layout_below="@+id/pieza_relative">
+
+        <ImageView
+            android:id="@+id/image_direccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/icon_direccion"/>
+
+        <TextView
+            android:id="@+id/direccion_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/image_direccion"
+            android:layout_toEndOf="@+id/image_direccion"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/white"
+            android:text="Direccion"/>
+
+        <TextView
+            android:id="@+id/direccion_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/image_direccion"
+            android:layout_toEndOf="@+id/image_direccion"
+            android:layout_marginStart="32dp"
+            android:textColor="@color/white"
+            android:text="callexssssssss"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/evento_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/direccion_relative"
+        android:textColor="@color/white"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="8dp"
+        android:text="Eventos" />
+    <View
+        android:id="@+id/view_linea"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_margin="6dp"
+        android:background="@color/cardview_dark_background"
+        android:layout_below="@id/evento_text" />
+
+
+    <!--
+        <TextView
+            android:id="@+id/trackTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/infoTitle"
+            android:text="Eventos del Pedido"
+            android:layout_marginTop="200dp"/>
+        -->
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_finalizados"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:layout_margin="4dp"
-        android:layout_below="@+id/trackTitle"
+        android:layout_height="200dp"
+        android:layout_below="@+id/view_linea"
+        android:layout_margin="2dp"
+        tools:listitem="@layout/item_rv_order_events" />
 
-        tools:listitem="@layout/item_rv_order_events"/>
+
 
     <Button
         android:id="@+id/button_test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/recycler_finalizados"
+        android:layout_alignParentBottom="true"
         android:text="Registrar Pedido"
         >
 
