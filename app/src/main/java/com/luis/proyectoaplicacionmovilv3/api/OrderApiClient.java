@@ -15,7 +15,9 @@ import retrofit2.http.Query;
 public class OrderApiClient {
     public interface OrderService {
         @GET("orders/getOne")
-        Call<OrderModel> getOrder(@Query("id") String id, @Query("orderNumber") String orderNumber, @Query("companyId") String companyId);
+        Call<OrderModel> getOrder(@Query("id") String id,
+                                  @Query("orderNumber") String orderNumber,
+                                  @Query("companyId") int companyId);
     }
 
     private final Retrofit retrofit = new Retrofit.Builder()

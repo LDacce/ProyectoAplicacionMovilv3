@@ -1,7 +1,7 @@
 package com.luis.proyectoaplicacionmovilv3.models;
 
 public class CompanyModel {
-    private int id;
+    private long id;
     private String description;
 
     public CompanyModel(int id, String description) {
@@ -9,11 +9,11 @@ public class CompanyModel {
         this.description = description;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

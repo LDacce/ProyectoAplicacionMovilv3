@@ -20,6 +20,7 @@ import com.luis.proyectoaplicacionmovilv3.adapters.EventListAdapter;
 import com.luis.proyectoaplicacionmovilv3.api.MasterApiClient;
 
 import com.luis.proyectoaplicacionmovilv3.models.EventModel;
+import com.luis.proyectoaplicacionmovilv3.models.OrderModel;
 
 import java.util.List;
 
@@ -27,25 +28,21 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-
 public class ManagementActivity extends AppCompatActivity {
+    private String orderId;
+    private String orderNumber;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_managment);
 
-        assert getSupportActionBar() != null;
-        TextView textView = new TextView(this);
-        textView.setText("TRegistro/Actualizacion de Evento del Pedido N° xxxxxx");
-        textView.setTextSize(18);
-        textView.setTextColor(ContextCompat.getColor(this, R.color.md_text_color));
-        textView.setGravity(Gravity.LEFT);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(textView);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        String orderId = (String) getIntent().getSerializableExtra("ORDER_ID_EXTRA");
+        String orderNumber = (String) getIntent().getSerializableExtra("ORDER_NUMBER_EXTRA");
 
+        configToolbar();
         loadEvents();
+
+
         Button submitButton = findViewById(R.id.submitButton);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,5 +104,18 @@ public class ManagementActivity extends AppCompatActivity {
 
         Log.d("eventId", String.valueOf(selectedEvent.getId()));
         Log.d("observation", observationText);
+    }
+
+    private void configToolbar() {
+        assert getSupportActionBar() != null;
+        TextView textView = new TextView(this);
+        textView.setText("Registro/Actualizacion de Evento del Pedido N° "+orderNumber);
+        textView.setTextSize(18);
+        textView.setTextColor(ContextCompat.getColor(this, R.color.md_text_color));
+        textView.setGravity(Gravity.LEFT);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(textView);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 }

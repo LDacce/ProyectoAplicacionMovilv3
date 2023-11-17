@@ -1,12 +1,18 @@
 package com.luis.proyectoaplicacionmovilv3.models;
 
+import androidx.annotation.Nullable;
+
+import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
-public class OrderModel {
-    private OffsetDateTime createDate;
-    private Object updateDate;
-    private UUID id;
+public class OrderModel implements Serializable {
+    private String createDate;
+
+    @Nullable()
+    private String updateDate;
+    private String id;
     private String orderNumber;
     private long pieces;
     private String consultantCode;
@@ -16,16 +22,16 @@ public class OrderModel {
     private String latitude;
     private String longitude;
     private CompanyModel company;
-    private OrderEventModel[] orderevents;
+    private List<OrderEventModel> orderevents;
 
-    public OffsetDateTime getCreateDate() { return createDate; }
-    public void setCreateDate(OffsetDateTime value) { this.createDate = value; }
+    public String getCreateDate() { return createDate; }
+    public void setCreateDate(String value) { this.createDate = value; }
 
-    public Object getUpdateDate() { return updateDate; }
-    public void setUpdateDate(Object value) { this.updateDate = value; }
+    public String getUpdateDate() { return updateDate; }
+    public void setUpdateDate(String value) { this.updateDate = value; }
 
-    public UUID getID() { return id; }
-    public void setID(UUID value) { this.id = value; }
+    public String getID() { return id; }
+    public void setID(String value) { this.id = value; }
 
     public String getOrderNumber() { return orderNumber; }
     public void setOrderNumber(String value) { this.orderNumber = value; }
@@ -54,7 +60,7 @@ public class OrderModel {
     public CompanyModel getCompany() { return company; }
     public void setCompany(CompanyModel value) { this.company = value; }
 
-    public OrderEventModel[] getOrderevents() { return orderevents; }
-    public void setOrderevents(OrderEventModel[] value) { this.orderevents = value; }
+    public List<OrderEventModel> getOrderevents() { return orderevents; }
+    public void setOrderevents(List<OrderEventModel> value) { this.orderevents = value; }
 }
 
