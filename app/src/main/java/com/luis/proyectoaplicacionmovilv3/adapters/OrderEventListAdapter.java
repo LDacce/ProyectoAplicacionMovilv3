@@ -9,16 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.luis.proyectoaplicacionmovilv3.R;
-import com.luis.proyectoaplicacionmovilv3.models.OrderModel;
+import com.luis.proyectoaplicacionmovilv3.models.OrderEventModel;
 
 import java.util.List;
 
 //djijwiejweiwjeiwjeweiwjiewjiejwiewjie
 public class OrderEventListAdapter extends RecyclerView.Adapter<OrderEventListAdapter.ViewHolder> {
 
-    List<OrderModel> listaOrderModels;
+    List<OrderEventModel> listaOrderModels;
 
-    public OrderEventListAdapter(List<OrderModel> listaOrderModels){
+    public OrderEventListAdapter(List<OrderEventModel> listaOrderModels){
         this.listaOrderModels = listaOrderModels;
     }
     @NonNull
@@ -30,12 +30,11 @@ public class OrderEventListAdapter extends RecyclerView.Adapter<OrderEventListAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        OrderModel orderModel = listaOrderModels.get(position);
+        OrderEventModel orderEventModel = listaOrderModels.get(position);
 
-        holder.nroPedido_text.setText(orderModel.nroPedido.toUpperCase());
-        holder.evento_text.setText(orderModel.eventPedido.toUpperCase());
-
-
+        holder.createDate_text.setText(orderEventModel.getCreateDate().toString());//VERIFICAR EL
+        // FORMATO DE LA FECHA
+        holder.event_text.setText(orderEventModel.getEvent().getDescription().toUpperCase());
 
     }
 
@@ -46,13 +45,13 @@ public class OrderEventListAdapter extends RecyclerView.Adapter<OrderEventListAd
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView nroPedido_text, evento_text;
+        TextView createDate_text, event_text;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            nroPedido_text = itemView.findViewById(R.id.NroPedido_text);
-            evento_text = itemView.findViewById(R.id.Evento_text);
+            createDate_text = itemView.findViewById(R.id.createDate_text);
+            event_text = itemView.findViewById(R.id.event_text);
 
         }
     }

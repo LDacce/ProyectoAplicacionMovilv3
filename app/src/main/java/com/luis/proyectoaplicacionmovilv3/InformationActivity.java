@@ -13,20 +13,22 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.luis.proyectoaplicacionmovilv3.models.OrderModel;
+import com.luis.proyectoaplicacionmovilv3.models.EventModel;
+import com.luis.proyectoaplicacionmovilv3.models.OrderEventModel;
 import com.luis.proyectoaplicacionmovilv3.adapters.OrderEventListAdapter;
+import com.luis.proyectoaplicacionmovilv3.models.UserModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
 
 public class InformationActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
-    List<OrderModel> pList;
-    OrderEventListAdapter pedidossAdapterr;
+    List<OrderEventModel> pList;
+    OrderEventListAdapter orderEventsAdapter;
     //
-    List<OrderModel> listaOrderModel = new ArrayList<>();
+    List<OrderEventModel> listaOrderModel = new ArrayList<>();
     OrderEventListAdapter orderEventListAdapter = new OrderEventListAdapter(listaOrderModel);
 
     @Override
@@ -53,14 +55,53 @@ public class InformationActivity extends AppCompatActivity {
             }
         });
 
+        /*
+        *
+        *
+        *
+        * {
+        "createDate": "2023-11-16T17:21:51.032Z",
+        "updateDate": null,
+        "id": "738414fd-825b-4640-b0bb-704ac5a7db41",
+        "observations": "",
+        "mainImageUrl": "",
+        "referenceImageUrl": "",
+        "longitude": "",
+        "latitude": "",
+        "__event__": {
+          "id": 1,
+          "description": "En Almacén"
+        },
+        "__user__": null
+      },
+      {
+        "createDate": "2023-11-16T17:21:51.027Z",
+        "updateDate": null,
+        "id": "d19aeb95-8b1d-4bec-b05f-079a6c1db742",
+        "observations": "",
+        "mainImageUrl": "",
+        "referenceImageUrl": "",
+        "longitude": "",
+        "latitude": "",
+        "__event__": {
+          "id": 2,
+          "description": "En envio"
+        },
+        "__user__": null
+      }*/
         pList = new ArrayList<>();
-        pList.add(new OrderModel("2222222","FUERE DE ARE","NNII"));
-        pList.add(new OrderModel("2222222","FUERE DE ARE","NII"));
-        pList.add(new OrderModel("2222222","FUERE DE ARE","NIII"));
+        pList.add(new OrderEventModel("738414fd-825b-4640-b0bb-704ac5a7db41", "", "", "", "", "",
+                new EventModel(1, "En Almacen"), new UserModel("738414fd-825b-4640-b0bb-704ac5a7db4", "admin"),
+                new Date(), new Date()));
+        pList.add(new OrderEventModel("d19aeb95-8b1d-4bec-b05f-079a6c1db742", "", "", "", "", "",
+                new EventModel(2, "En envio"), new UserModel("738414fd-825b-4640-b0bb" +
+                "-704ac5a7db4", "admin"),
+                new Date(), new Date()));
+
 
         recyclerView = findViewById(R.id.recycler_finalizados);
-        pedidossAdapterr = new OrderEventListAdapter(pList);
-        recyclerView.setAdapter(pedidossAdapterr);
+        orderEventsAdapter = new OrderEventListAdapter(pList);
+        recyclerView.setAdapter(orderEventsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 

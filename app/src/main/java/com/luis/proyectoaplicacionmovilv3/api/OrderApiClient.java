@@ -2,6 +2,7 @@ package com.luis.proyectoaplicacionmovilv3.api;
 
 import com.luis.proyectoaplicacionmovilv3.models.CompanyModel;
 import com.luis.proyectoaplicacionmovilv3.models.EventModel;
+import com.luis.proyectoaplicacionmovilv3.models.OrderModel;
 
 import java.util.List;
 
@@ -9,14 +10,12 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public class OrderApiClient {
     public interface OrderService {
-        @GET("masters/listEvents")
-        Call<List<EventModel>> getEventList();
-
-        @GET("masters/listCompanies")
-        Call<List<CompanyModel>> getCompanyList();
+        @GET("orders/getOne")
+        Call<OrderModel> getOrder(@Query("id") String id, @Query("orderNumber") String orderNumber, @Query("companyId") String companyId);
     }
 
     private final Retrofit retrofit = new Retrofit.Builder()
@@ -39,8 +38,4 @@ public class OrderApiClient {
         }
         return service;
     }
-    //prueba
-    public void OrderApiClientest() {
-            //Constructor privado para evitar la creación de instancias fuera de la clase
-        }
 }

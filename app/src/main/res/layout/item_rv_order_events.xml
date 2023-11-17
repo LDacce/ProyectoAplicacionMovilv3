@@ -7,7 +7,7 @@
 
 
     <TextView
-        android:id="@+id/NroPedido_text"
+        android:id="@+id/createDate_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
@@ -16,7 +16,7 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/Evento_text"
+        android:id="@+id/event_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
