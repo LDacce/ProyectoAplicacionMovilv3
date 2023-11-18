@@ -49,49 +49,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/observationSection"
         android:orientation="horizontal">
-
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/fragment_container_main"
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_weight="1"
             android:padding="8dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="Título" />
-
-            <ImageView
-                android:id="@+id/mainImageButton"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:src="@android:drawable/ic_menu_camera" />
-        </LinearLayout>
-
-        <LinearLayout
+            android:orientation="vertical"
+            >
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/fragment_container_ref"
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_weight="1"
             android:padding="8dp"
+            android:orientation="vertical"
+            >
+        </FrameLayout>
 
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="Título" />
-
-            <ImageView
-                android:id="@+id/referenceImageButton"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:src="@android:drawable/ic_menu_camera" />
-        </LinearLayout>
     </LinearLayout>
 
     <!-- Botón de acción -->

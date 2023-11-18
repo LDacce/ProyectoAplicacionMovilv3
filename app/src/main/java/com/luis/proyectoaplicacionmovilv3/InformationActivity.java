@@ -90,7 +90,7 @@ public class InformationActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
-        Button btn = findViewById(R.id.button_test);
+        Button btn = findViewById(R.id.onCreateButton);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

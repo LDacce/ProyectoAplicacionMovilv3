@@ -1,16 +1,28 @@
 package com.luis.proyectoaplicacionmovilv3;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -19,8 +31,9 @@ import android.widget.Toast;
 import com.luis.proyectoaplicacionmovilv3.adapters.EventListAdapter;
 import com.luis.proyectoaplicacionmovilv3.api.MasterApiClient;
 
+import com.luis.proyectoaplicacionmovilv3.fragments.CameraFragment;
 import com.luis.proyectoaplicacionmovilv3.models.EventModel;
-import com.luis.proyectoaplicacionmovilv3.models.OrderModel;
+import com.luis.proyectoaplicacionmovilv3.utils.ImageUtils;
 
 import java.util.List;
 
@@ -31,15 +44,19 @@ import retrofit2.Response;
 public class ManagementActivity extends AppCompatActivity {
     private String orderId;
     private String orderNumber;
+
+    private CameraFragment mainCameraFragment;
+    private CameraFragment refCameraFragment;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_managment);
 
-        String orderId = (String) getIntent().getSerializableExtra("ORDER_ID_EXTRA");
-        String orderNumber = (String) getIntent().getSerializableExtra("ORDER_NUMBER_EXTRA");
+        orderId = (String) getIntent().getSerializableExtra("ORDER_ID_EXTRA");
+        orderNumber = (String) getIntent().getSerializableExtra("ORDER_NUMBER_EXTRA");
 
         configToolbar();
+        configCameraFragments();
         loadEvents();
 
 
@@ -47,7 +64,7 @@ public class ManagementActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSubmitButton();
+                onCreateOrder();
             }
         });
     }
@@ -57,55 +74,6 @@ public class ManagementActivity extends AppCompatActivity {
         finish();
         return true;
     }
-
-    private void loadEvents() {
-        Spinner eventsComboBox = (Spinner) findViewById(R.id.eventsComboBox);
-        // Obtener instancia de MasterService
-        MasterApiClient.MasterService service = MasterApiClient.getInstance().getService();
-        // Realizar la llamada asíncrona
-        service.getEventList().enqueue(new Callback<List<EventModel>>() {
-            @Override
-            public void onResponse(Call<List<EventModel>> call, Response<List<EventModel>> response) {
-                if (response.isSuccessful()) {
-                    // La llamada fue exitosa, establecer la respuesta en el spinner
-                    List<EventModel> eventList = response.body();
-                    EventListAdapter adapter = new EventListAdapter(getBaseContext(),
-                            android.R.layout.simple_spinner_item,eventList); //
-                    // Utiliza tu EventAdapter personalizado
-                    eventsComboBox.setAdapter(adapter);
-                } else {
-                    // La llamada no fue exitosa, mostrar un mensaje de error
-                    Toast.makeText(getBaseContext(), "Error al obtener la lista de eventos",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-            @Override
-            public void onFailure(Call<List<EventModel>> call, Throwable t) {
-                // Error en la llamada, mostrar un mensaje de error
-                Toast.makeText(getBaseContext(), "Error al realizar la llamada", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    public void onBackView(View view) {
-        // Aquí colocas la lógica que deseas ejecutar cuando se haga clic en el botón
-    }
-    public void onSubmitButton() {
-        // Obtener el ComboBox
-        Spinner eventsComboBox = findViewById(R.id.eventsComboBox);
-        // Obtener el texto seleccionado en el ComboBox
-        EventModel selectedEvent = (EventModel) eventsComboBox.getSelectedItem();
-        // Obtener el TextArea
-        EditText observationTextArea = findViewById(R.id.observationTextArea);
-        // Obtener el texto ingresado en el TextArea
-        String observationText = observationTextArea.getText().toString();
-        // Obtener las imágenes de los botones
-        ImageView mainImageButton = findViewById(R.id.mainImageButton);
-        ImageView referenceImageButton =  findViewById(R.id.referenceImageButton);
-
-        Log.d("eventId", String.valueOf(selectedEvent.getId()));
-        Log.d("observation", observationText);
-    }
-
     private void configToolbar() {
         assert getSupportActionBar() != null;
         TextView textView = new TextView(this);
@@ -116,6 +84,60 @@ public class ManagementActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(textView);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+    private void configCameraFragments() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
+        // Crear una nueva instancia de CameraFragment con texto predeterminado
+        mainCameraFragment = CameraFragment.newInstance("Foto de Cargo");
+        fragmentTransaction.add(R.id.fragment_container_main, mainCameraFragment);
+
+        // Crear una nueva instancia de CameraFragment con texto predeterminado
+        refCameraFragment = CameraFragment.newInstance("Foto Referencial");
+        fragmentTransaction.add(R.id.fragment_container_ref, refCameraFragment);
+
+        fragmentTransaction.commit();
+    }
+
+    private void loadEvents() {
+        Spinner eventsComboBox = (Spinner) findViewById(R.id.eventsComboBox);
+        MasterApiClient.MasterService service = MasterApiClient.getInstance().getService();
+        service.getEventList().enqueue(new Callback<List<EventModel>>() {
+            @Override
+            public void onResponse(Call<List<EventModel>> call, Response<List<EventModel>> response) {
+                if (response.isSuccessful()) {
+                    List<EventModel> eventList = response.body();
+                    EventListAdapter adapter = new EventListAdapter(getBaseContext(),
+                            android.R.layout.simple_spinner_item,eventList); //
+                    eventsComboBox.setAdapter(adapter);
+                } else {
+                    Toast.makeText(getBaseContext(), "Error al obtener la lista de eventos",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<List<EventModel>> call, Throwable t) {
+                Toast.makeText(getBaseContext(), "Error al realizar la llamada", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    public void onCreateOrder() {
+        Spinner eventsComboBox = findViewById(R.id.eventsComboBox);
+        EventModel selectedEvent = (EventModel) eventsComboBox.getSelectedItem();
+
+        EditText observationTextArea = findViewById(R.id.observationTextArea);
+
+        String observationText = observationTextArea.getText().toString();
+
+        ImageView mainImageButton = mainCameraFragment.getView().findViewById(R.id.imagen_button);
+        ImageView referenceImageButton =  refCameraFragment.getView().findViewById(R.id.imagen_button);
+
+
+        String mainImgBase64 = ImageUtils.drawableToBase64(mainImageButton.getDrawable());
+        String refImgBase64 = ImageUtils.drawableToBase64(referenceImageButton.getDrawable());
+
+        Log.d("eventId", String.valueOf(selectedEvent.getId()));
+        Log.d("observation", observationText);
     }
 }
