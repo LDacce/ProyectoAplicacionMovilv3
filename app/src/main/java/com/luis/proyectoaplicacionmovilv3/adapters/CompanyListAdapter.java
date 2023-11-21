@@ -7,26 +7,28 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.luis.proyectoaplicacionmovilv3.models.EventModel;
+import com.luis.proyectoaplicacionmovilv3.models.CompanyModel;
+import com.luis.proyectoaplicacionmovilv3.models.CompanyModel;
 
 import java.util.List;
 
 
-public class EventListAdapter extends ArrayAdapter<EventModel> {
-    private List<EventModel> eventList;
+public class CompanyListAdapter extends ArrayAdapter<CompanyModel> {
+    private List<CompanyModel> companyList;
 
-    public EventListAdapter(Context context, int resource, List<EventModel> eventList) {
-        super(context, resource, eventList);
-        this.eventList = eventList;
+    public CompanyListAdapter(Context context, int resource, List<CompanyModel> companyList) {
+        super(context, resource, companyList);
+        this.companyList = companyList;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(android.R.layout.select_dialog_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(android.R.layout.select_dialog_item, parent,
+                    false);
         }
         TextView textView = (TextView) convertView.findViewById(android.R.id.text1);
-        textView.setText(eventList.get(position).getDescription());
+        textView.setText(companyList.get(position).getDescription());
         return convertView;
     }
 

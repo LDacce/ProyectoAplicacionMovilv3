@@ -1,29 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Customize your light theme here. -->
-        <!--<item name="colorPrimary">@color/color_primary</item>
-         <item name="colorPrimaryDark">@color/color_primary_shade</item>
-         <item name="android:windowBackground">@color/md_background_color</item>
-         <item name="android:textColor">@color/md_text_color</item>
-         <item name="android:textColorHint">@color/md_color_step_750</item>
-         <item name="android:textSize">16dp</item>
+    <style name="Base.Theme.ProyectoAplicacionMovilv3" parent="Theme.Material3.Light">
 
-         <item name="editTextStyle">@style/EditTextStyle</item>
-         <item name="spinnerStyle">@style/SpinnerStyle</item>-->
     </style>
+    <style name="Theme.ProyectoAplicacionMovilv3" parent="Base.Theme.ProyectoAplicacionMovilv3" />
 
-
-    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
-        <item name="android:textColor">@color/md_text_color</item>
-        <!-- Otros atributos de estilo para el EditText -->
-    </style>
-
-    <style name="SpinnerStyle" parent="Widget.AppCompat.Spinner">
-        <item name="android:background">@color/md_background_color</item>
-        <item name="android:popupBackground">@color/md_background_color</item>
-        <item name="android:dropDownSelector">@color/md_background_color</item>
-        <item name="android:textColor">@color/md_text_color</item>
-        <!-- Otros atributos de estilo para el ComboBox -->
-    </style>
 </resources>

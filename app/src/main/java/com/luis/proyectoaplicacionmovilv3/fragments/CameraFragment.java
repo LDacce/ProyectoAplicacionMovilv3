@@ -13,47 +13,49 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-
-import com.luis.proyectoaplicacionmovilv3.ManagementActivity;
 import com.luis.proyectoaplicacionmovilv3.R;
-
 public class CameraFragment extends Fragment {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private View view;
     private Uri uri;
+    private ImageButton imageButtonBase;
+    private ImageButton imageButtonLoad;
+    public Uri getUri() {
+        return uri;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_camera, container,
                 false);
-
         Bundle args = getArguments();
         if (args != null) {
             String defaultText = args.getString("defaultText");
             TextView textView = view.findViewById(R.id.title_text);
             textView.setText(defaultText);
         }
-
-        // Obtener referencia al botón
-        ImageButton button = view.findViewById(R.id.imagen_button);
-
-        // Configurar el clic del botón para abrir la cámara
-        button.setOnClickListener(new View.OnClickListener() {
+        imageButtonBase = view.findViewById(R.id.imagen_button_base);
+        imageButtonLoad = view.findViewById(R.id.imagen_button_load);
+        imageButtonLoad.setVisibility(View.GONE);
+        imageButtonBase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showOptionsDialog();
             }
         });
-
+        imageButtonLoad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showOptionsDialog();
+            }
+        });
         return view;
     }
-
     public static CameraFragment newInstance(String defaultText) {
         CameraFragment fragment = new CameraFragment();
         Bundle args = new Bundle();
@@ -61,49 +63,44 @@ public class CameraFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
     private void showOptionsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Selecciona una opción");
-        builder.setItems(new CharSequence[]{"Abrir Cámara", "Ir a Galería"},
-                new DialogInterface.OnClickListener() {
+        builder.setTitle("Selecciona una opción")
+                .setMessage("¿Cómo deseas cargar la imagen?")
+                .setPositiveButton("Abrir Cámara", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Aquí puedes manejar la opción seleccionada
-                        switch (which) {
-                            case 0:
-                                // Código para abrir la cámara
-                                openCamera();
-                                break;
-                            case 1:
-                                // Código para abrir la galería
-                                openGallery();
-                                break;
-                        }
+                        openCamera();
                     }
-                });
-        builder.show();
+                })
+                .setNegativeButton("Ir a Galería", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        openGallery();
+                    }
+                })
+                .show();
     }
-
     private void openCamera() {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "Título");
         values.put(MediaStore.Images.Media.DESCRIPTION, "Descripción");
-
         uri =
                 getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-
         cameraARL.launch(intent);
-
     }
-
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         galleryARL.launch(intent);
+    }
+    public void setUriInImageButtonLoad(Uri _uri){
+        uri = _uri;
+        imageButtonLoad.setImageURI(uri);
+        imageButtonLoad.setVisibility(View.VISIBLE);
+        imageButtonBase.setVisibility(View.GONE);
     }
     private ActivityResultLauncher<Intent> galleryARL = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -112,9 +109,7 @@ public class CameraFragment extends Fragment {
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
-                        uri = data.getData();
-                        ImageButton button = view.findViewById(R.id.imagen_button);
-                        button.setImageURI(uri);
+                        setUriInImageButtonLoad(data.getData());
                     } else {
                         Toast.makeText(getContext(), "Proceso Cancelado por el Usuario",
                                 Toast.LENGTH_SHORT).show();
@@ -122,15 +117,13 @@ public class CameraFragment extends Fragment {
                 }
             }
     );
-
     private ActivityResultLauncher<Intent> cameraARL = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        ImageButton button = view.findViewById(R.id.imagen_button);
-                        button.setImageURI(uri);
+                        setUriInImageButtonLoad(uri);
                     } else {
                         Toast.makeText(getContext(), "Proceso Cancelado por el Usuario",
                                 Toast.LENGTH_SHORT).show();
@@ -138,6 +131,5 @@ public class CameraFragment extends Fragment {
                 }
             }
     );
-
 }
 

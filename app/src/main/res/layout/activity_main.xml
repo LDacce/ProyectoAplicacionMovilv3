@@ -1,87 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
 
-    <Button
-        android:id="@+id/submit_button"
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="24dp"
-        android:text="Ver Informacion del Pedido"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
 
-    </Button>
+        <ImageView
+            android:id="@+id/image_scanner"
+            android:layout_width="310dp"
+            android:layout_height="310dp"
+            android:layout_marginTop="8dp"
+            android:layout_centerHorizontal="true"
+            android:adjustViewBounds="true"
+            app:srcCompat="@drawable/image_code_qr" />
 
-    <ImageView
-        android:id="@+id/image_text"
-        android:layout_width="310dp"
-        android:layout_height="310dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/image_code_qr" />
+        <Button
+            android:id="@+id/scanButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:layout_centerHorizontal="true"
+            android:paddingHorizontal="32dp"
+            android:layout_below="@+id/image_scanner"
+            android:paddingVertical="12dp"
+            android:text="SCANEE UN CÓDIGO O" />
 
-    <Button
-        android:id="@+id/button_scan_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:paddingHorizontal="54dp"
-        android:paddingVertical="12dp"
-        android:text="ESCANEAR"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        <EditText
+            android:id="@+id/orderNumberEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/scanButton"
+            android:gravity="top|start"
+            android:hint="Ingrese el Nro de Orden"
+            />
+        <Spinner
+            android:id="@+id/companySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_below="@+id/orderNumberEditText"
+            android:padding="8dp" />
 
-    <EditText
-        android:id="@+id/edit_nrorden_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="Nro de Orden"
-        android:inputType="text"
-        android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_scan_text" />
-
-    <Spinner
-        android:id="@+id/spinner_empresa"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-
-        android:entries="@array/datos_spinner_empresa"
-        android:padding="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_nrorden_text" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:background="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_text" />
+        <Button
+            android:id="@+id/onSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_below="@id/companySpinner"
+            android:text="VER INFORMACION DEL PEDIDO"></Button>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+</layout>

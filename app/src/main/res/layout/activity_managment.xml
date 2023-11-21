@@ -28,7 +28,8 @@
             android:hint="Ingresa algunas observaciones"
             android:inputType="textMultiLine"
             android:lines="6"
-            android:scrollbars="vertical" />
+            android:scrollbars="vertical"
+            android:gravity="top|start" />
 
         <ImageButton
             android:layout_width="wrap_content"

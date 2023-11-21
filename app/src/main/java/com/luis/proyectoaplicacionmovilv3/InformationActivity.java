@@ -1,102 +1,66 @@
 package com.luis.proyectoaplicacionmovilv3;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.luis.proyectoaplicacionmovilv3.models.EventModel;
+import com.luis.proyectoaplicacionmovilv3.api.OrderEventApiClient;
 import com.luis.proyectoaplicacionmovilv3.models.OrderEventModel;
 import com.luis.proyectoaplicacionmovilv3.adapters.OrderEventListAdapter;
 import com.luis.proyectoaplicacionmovilv3.models.OrderModel;
-import com.luis.proyectoaplicacionmovilv3.models.UserModel;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InformationActivity extends AppCompatActivity {
-
     RecyclerView recyclerView;
-    List<OrderEventModel> pList;
-    OrderEventListAdapter orderEventsAdapter;
-    //
-    List<OrderEventModel> listaOrderModel = new ArrayList<>();
-    OrderEventListAdapter orderEventListAdapter = new OrderEventListAdapter(listaOrderModel);
+    public static OrderEventListAdapter orderEventsAdapter;
+    OrderModel order;
 
+    public static String ORDER_EXTRA = "ORDER_EXTRA";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information);
+        order = (OrderModel) getIntent().getSerializableExtra(ORDER_EXTRA);
         configToolbar();
-        /*
-        *
-        *
-        *
-        * {
-        "createDate": "2023-11-16T17:21:51.032Z",
-        "updateDate": null,
-        "id": "738414fd-825b-4640-b0bb-704ac5a7db41",
-        "observations": "",
-        "mainImageUrl": "",
-        "referenceImageUrl": "",
-        "longitude": "",
-        "latitude": "",
-        "__event__": {
-          "id": 1,
-          "description": "En Almacén"
-        },
-        "__user__": null
-      },
-      {
-        "createDate": "2023-11-16T17:21:51.027Z",
-        "updateDate": null,
-        "id": "d19aeb95-8b1d-4bec-b05f-079a6c1db742",
-        "observations": "",
-        "mainImageUrl": "",
-        "referenceImageUrl": "",
-        "longitude": "",
-        "latitude": "",
-        "__event__": {
-          "id": 2,
-          "description": "En envio"
-        },
-        "__user__": null
-      }*/
-        //Obtener la data pasada por el Intent
-        OrderModel order = (OrderModel) getIntent().getSerializableExtra("ORDER_EXTRA");
-
-        pList = new ArrayList<>();
-        pList.add(new OrderEventModel("738414fd-825b-4640-b0bb-704ac5a7db41", "", "", "", "", "",
-                new EventModel(1, "En Almacen"), new UserModel("738414fd-825b-4640-b0bb-704ac5a7db4", "admin"),
-                "2023-11-16T17:21:51.032Z", ""));
-        pList.add(new OrderEventModel("d19aeb95-8b1d-4bec-b05f-079a6c1db742", "", "", "", "", "",
-                new EventModel(2, "En envio"), new UserModel("738414fd-825b-4640-b0bb" +
-                "-704ac5a7db4", "admin"),
-                "2023-11-16T17:21:51.027Z", ""));
-
-
-        recyclerView = findViewById(R.id.recycler_finalizados);
-        orderEventsAdapter = new OrderEventListAdapter(pList);
-        recyclerView.setAdapter(orderEventsAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-
-        Button btn = findViewById(R.id.onCreateButton);
-        btn.setOnClickListener(new View.OnClickListener() {
+        loadConsultantInfo();
+        loadRecyclerView();
+        orderEventsAdapter.setOnItemClickListener(new OrderEventListAdapter.OnItemClickListener() {
+            @Override
+            public void onEditClick(int position) {
+                OrderEventModel orderEvent = orderEventsAdapter.getOrderEvent(position);
+                Intent intent = new Intent(InformationActivity.this, ManagementActivity.class);
+                intent.putExtra(ManagementActivity.ORDER_ID_EXTRA, order.getId());
+                intent.putExtra(ManagementActivity.ORDER_NUMBER_EXTRA, order.getOrderNumber());
+                intent.putExtra(ManagementActivity.MANAGMENT_ACTION_EXTRA, "EDIT");
+                intent.putExtra(ManagementActivity.ORDER_EVENT_ITEM_EXTRA, orderEvent);
+                startActivity(intent);
+            }
+            @Override
+            public void onDeleteClick(int position) {
+                OrderEventModel orderEventModel = orderEventsAdapter.getOrderEvent(position);
+                showOptionsDialog(orderEventModel, position);
+            }
+        });
+        Button onCreateButton = findViewById(R.id.onCreateButton);
+        onCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(InformationActivity.this, ManagementActivity.class);
-                intent.putExtra("ORDER_ID_EXTRA", order.getID());
-                intent.putExtra("ORDER_NUMBER_EXTRA", order.getOrderNumber());
+                intent.putExtra(ManagementActivity.ORDER_ID_EXTRA, order.getId());
+                intent.putExtra(ManagementActivity.ORDER_NUMBER_EXTRA, order.getOrderNumber());
+                intent.putExtra(ManagementActivity.MANAGMENT_ACTION_EXTRA, "CREATE");
                 startActivity(intent);
             }
         });
@@ -111,13 +75,68 @@ public class InformationActivity extends AppCompatActivity {
     private void configToolbar() {
         assert getSupportActionBar() != null;
         TextView textView = new TextView(this);
-        textView.setText("Informacion del Pedido N° xxxxxx");
+        textView.setText("Informacion del Pedido N° " + order.getOrderNumber());
         textView.setTextSize(18);
-        textView.setTextColor(ContextCompat.getColor(this, R.color.md_text_color));
+        //textView.setTextColor(ContextCompat.getColor(this, R.color.md_text_color));
         textView.setGravity(Gravity.LEFT);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(textView);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+    }
+
+    private void loadConsultantInfo(){
+
+    }
+    private void loadRecyclerView(){
+        recyclerView = findViewById(R.id.recycler_finalizados);
+        orderEventsAdapter = new OrderEventListAdapter(order.getOrderevents());
+        recyclerView.setAdapter(orderEventsAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+    private void showOptionsDialog(OrderEventModel orderEvent, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("¿Está seguro de eliminar el evento?")
+                .setMessage(orderEvent.getEvent().getDescription())
+                .setPositiveButton("Sí, Eliminar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onDeleteOrder(orderEvent.getID(), position);
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getBaseContext(), "Se canceló el proceso de eliminación",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
+    }
+    private void onDeleteOrder(String id, int position) {
+        OrderEventApiClient.OrderEventService service = OrderEventApiClient.getInstance().getService();
+        service.deleteOrderEvent(id).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getBaseContext(),
+                            "Se elimino el evento del pedido N°: " + order.getOrderNumber() + " " +
+                                    "exitosamente",
+                            Toast.LENGTH_SHORT).show();
+                    orderEventsAdapter.removeOrderEvent(position);
+                } else {
+                    Toast.makeText(getBaseContext(), "Error al eliminar el evento del pedido",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(getBaseContext(),
+                        "Error al eliminar el evento del pedido. Ver Logs",
+                        Toast.LENGTH_SHORT).show();
+                Log.e("DELETE_ORDER_EVENT_ERROR", t.toString());
+
+            }
+        });
     }
 }

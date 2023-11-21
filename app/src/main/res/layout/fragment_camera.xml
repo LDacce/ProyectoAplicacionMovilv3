@@ -13,11 +13,16 @@
                 android:textAlignment="center"/>
 
             <ImageButton
-                android:id="@+id/imagen_button"
+                android:id="@+id/imagen_button_base"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:src="@android:drawable/ic_menu_camera"
-                android:scaleType="fitXY"
-                />
+                android:scaleType="fitXY" />
+    <ImageButton
+        android:id="@+id/imagen_button_load"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scaleType="fitXY" />
 </LinearLayout>

@@ -2,7 +2,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/cardview_dark_background"
     android:padding="10dp"
     android:layout_margin="2dp">
 
@@ -11,8 +10,7 @@
         android:id="@+id/createDate_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="N° 555555"
-        android:textColor="@color/white"
+        android:text="N° xxxxxxx"
         android:textSize="18dp" />
 
     <TextView
@@ -21,12 +19,11 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:layout_gravity="bottom"
-        android:textColor="@color/white"
-        android:text="Zona NO ENCONTRADO "/>
+        android:text="Evento del Pedido"/>
 
 
     <ImageView
-        android:id="@+id/edit_image"
+        android:id="@+id/onEditButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
@@ -36,7 +33,7 @@
         android:src="@drawable/icon_edit"/>
 
     <ImageView
-        android:id="@+id/delete_image"
+        android:id="@+id/onDeleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
