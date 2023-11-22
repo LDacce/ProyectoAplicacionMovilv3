@@ -34,6 +34,14 @@ public class EventListAdapter extends ArrayAdapter<EventModel> {
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         return getView(position, convertView, parent);
     }
+    public int getPosition(int eventId) {
+        for (int i = 0; i < eventList.size(); i++) {
+            if (eventList.get(i).getId() == eventId) {
+                return i;
+            }
+        }
+        return -1; // Si no se encuentra el evento, devuelve -1
+    }
 }
 
 

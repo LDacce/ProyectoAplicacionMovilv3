@@ -18,6 +18,8 @@ import com.luis.proyectoaplicacionmovilv3.api.OrderEventApiClient;
 import com.luis.proyectoaplicacionmovilv3.models.OrderEventModel;
 import com.luis.proyectoaplicacionmovilv3.adapters.OrderEventListAdapter;
 import com.luis.proyectoaplicacionmovilv3.models.OrderModel;
+import com.luis.proyectoaplicacionmovilv3.utils.NetworkUtils;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -86,7 +88,14 @@ public class InformationActivity extends AppCompatActivity {
     }
 
     private void loadConsultantInfo(){
-
+        TextView consultantTextView = findViewById(R.id.consultant_edit);
+        consultantTextView.setText(order.getConsultantName());
+        TextView contactTextView = findViewById(R.id.contact_edit);
+        contactTextView.setText(order.getConsultantPhone());
+        TextView pieceTextView = findViewById(R.id.piece_edit);
+        pieceTextView.setText(String.valueOf(order.getPieces()));
+        TextView addressTextView = findViewById(R.id.address_edit);
+        addressTextView.setText(order.getAddress());
     }
     private void loadRecyclerView(){
         recyclerView = findViewById(R.id.recycler_finalizados);
@@ -125,17 +134,16 @@ public class InformationActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     orderEventsAdapter.removeOrderEvent(position);
                 } else {
-                    Toast.makeText(getBaseContext(), "Error al eliminar el evento del pedido",
-                            Toast.LENGTH_SHORT).show();
+                    NetworkUtils.handleResponseError(getBaseContext(), response, "Error al " +
+                            "eliminar el evento." +
+                            " del pedido.", "DELETE_ORDER_EVENT" );
                 }
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getBaseContext(),
-                        "Error al eliminar el evento del pedido. Ver Logs",
-                        Toast.LENGTH_SHORT).show();
-                Log.e("DELETE_ORDER_EVENT_ERROR", t.toString());
-
+                NetworkUtils.handleFailureError(getBaseContext(), t, "Error al " +
+                        "eliminar el evento." +
+                        " del pedido.", "DELETE_ORDER_EVENT" );
             }
         });
     }

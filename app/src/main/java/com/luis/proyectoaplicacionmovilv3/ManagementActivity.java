@@ -41,10 +41,12 @@ import com.luis.proyectoaplicacionmovilv3.api.MasterApiClient;
 
 import com.luis.proyectoaplicacionmovilv3.api.OrderEventApiClient;
 import com.luis.proyectoaplicacionmovilv3.dtos.CreateOrderEventDto;
+import com.luis.proyectoaplicacionmovilv3.dtos.UpdateOrderEventDto;
 import com.luis.proyectoaplicacionmovilv3.fragments.CameraFragment;
 import com.luis.proyectoaplicacionmovilv3.models.EventModel;
 import com.luis.proyectoaplicacionmovilv3.models.OrderEventModel;
 import com.luis.proyectoaplicacionmovilv3.utils.ImageUtils;
+import com.luis.proyectoaplicacionmovilv3.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -89,7 +91,8 @@ public class ManagementActivity extends AppCompatActivity {
         eventsComboBox.setAdapter(MainActivity.eventListAdapter);
 
         if (orderEvent != null && managmentAction.equals("EDIT")) {
-            eventsComboBox.setSelection(orderEvent.getEvent().getId(), true);
+            eventsComboBox.setSelection(MainActivity.eventListAdapter.getPosition(orderEvent.getEvent().getId()),
+                    true);
             observationsTextArea.setText(orderEvent.getObservations());
             if (orderEvent.getMainImageURL() != null && !orderEvent.getMainImageURL().equals("")) {
                 mainCameraFragment.setUriInImageButtonLoad(Uri.parse(orderEvent.getMainImageURL()));
@@ -186,12 +189,12 @@ public class ManagementActivity extends AppCompatActivity {
         return true;
     }
     private boolean isFormDirty(){
-        return eventsComboBox.isDirty() || observationsTextArea.isDirty();
+        return eventsComboBox.isDirty() || observationsTextArea.isDirty() || mainCameraFragment.isImageButtonLoadDirty || refCameraFragment.isImageButtonLoadDirty;
     }
     public void onCreateOrder() {
         EventModel selectedEvent = (EventModel) eventsComboBox.getSelectedItem();
         String observationText = observationsTextArea.getText().toString();
-        CreateOrderEventDto dto = new CreateOrderEventDto(selectedEvent.getId(), "", orderId,
+        CreateOrderEventDto dto = new CreateOrderEventDto(selectedEvent.getId(), "af6d3b8f-832d-4ae6-ab06-e83fe0a1b1c5", orderId,
                 observationText, "", "",
                 "", "");
 
@@ -204,45 +207,44 @@ public class ManagementActivity extends AppCompatActivity {
                     InformationActivity.orderEventsAdapter.addOrderEvent(orderEvent);
                     uploadFiles(orderEvent.getID());
                 } else {
-                    Toast.makeText(getBaseContext(), "Error al registrar el evento del pedido",
-                            Toast.LENGTH_SHORT).show();
+                    NetworkUtils.handleResponseError(getBaseContext(), response, "Error al crear " +
+                            "el evento del pedido", "CREATE_ORDER_EVENT");
                 }
             }
             @Override
             public void onFailure(Call<OrderEventModel> call, Throwable t) {
-                String errorMessage = t.getMessage();
-                Toast.makeText(getBaseContext(),
-                        "Error al registrar el evento del pedido. ERROR: " + errorMessage,
-                        Toast.LENGTH_SHORT).show();
+                NetworkUtils.handleFailureError(getBaseContext(), t, "Error al crear " +
+                        "el evento del pedido", "CREATE_ORDER_EVENT");
             }
         });
     }
     public void onEditOrder() {
         EventModel selectedEvent = (EventModel) eventsComboBox.getSelectedItem();
         String observationText = observationsTextArea.getText().toString();
-        CreateOrderEventDto dto = new CreateOrderEventDto(selectedEvent.getId(), "", orderId,
+        UpdateOrderEventDto dto = new UpdateOrderEventDto(selectedEvent.getId(),
+                orderEvent.getUser().getID(),
+                orderId,
                 observationText, orderEvent.getMainImageURL(), orderEvent.getReferenceImageURL(),
                 "", "");
 
         OrderEventApiClient.OrderEventService service = OrderEventApiClient.getInstance().getService();
-        service.createOrderEvent(dto).enqueue(new Callback<OrderEventModel>() {
+        service.updateOrderEvent(orderEvent.getID(), dto).enqueue(new Callback<OrderEventModel>() {
             @Override
             public void onResponse(Call<OrderEventModel> call, Response<OrderEventModel> response) {
                 if (response.isSuccessful()) {
                     OrderEventModel orderEvent = response.body();
-                    InformationActivity.orderEventsAdapter.addOrderEvent(orderEvent);
+                    int position =
+                            InformationActivity.orderEventsAdapter.getPosition(orderEvent.getID());
+                    InformationActivity.orderEventsAdapter.editOrderEvent(position, orderEvent);
                     uploadFiles(orderEvent.getID());
                 } else {
-                    Toast.makeText(getBaseContext(), "Error al registrar el evento del pedido",
-                            Toast.LENGTH_SHORT).show();
+                    NetworkUtils.handleResponseError(getBaseContext(), response, "Error al editar el evento del pedido", "EDIT_ORDER_EVENT");
                 }
             }
             @Override
             public void onFailure(Call<OrderEventModel> call, Throwable t) {
-                String errorMessage = t.getMessage();
-                Toast.makeText(getBaseContext(),
-                        "Error al registrar el evento del pedido. ERROR: " + errorMessage,
-                        Toast.LENGTH_SHORT).show();
+                NetworkUtils.handleFailureError(getBaseContext(), t, "Error al editar el evento " +
+                        "del pedido", "EDIT_ORDER_EVENT");
             }
         });
     }
@@ -259,21 +261,20 @@ public class ManagementActivity extends AppCompatActivity {
             public void onResponse(Call<OrderEventModel> call, Response<OrderEventModel> response) {
                 if (response.isSuccessful()) {
                     OrderEventModel orderEvent = response.body();
-                    InformationActivity.orderEventsAdapter.editOrderEvent(0, orderEvent);
+                    int position =
+                            InformationActivity.orderEventsAdapter.getPosition(orderEvent.getID());
+                    InformationActivity.orderEventsAdapter.editOrderEvent(position, orderEvent);
                     Toast.makeText(getBaseContext(), "Se registro el pedido exitosamente",
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getBaseContext(), "Se registro el pedido exitosamente, " +
-                                    "pero Hubo un Error al subir las imagenes, actualicelas",
-                            Toast.LENGTH_SHORT).show();
+                    NetworkUtils.handleResponseError(getBaseContext(), response, "Se registro el pedido exitosamente, pero Hubo un Error al subir las imagenes, actualicelas.", "UPLOAD_IMAGES");
                 }
                 finish();
             }
             @Override
             public void onFailure(Call<OrderEventModel> call, Throwable t) {
-                Toast.makeText(getBaseContext(), "Se registro el pedido exitosamente, " +
-                                "pero Hubo un Error al subir las imagenes, actualicelas, ERROR: " + t.getMessage(),
-                        Toast.LENGTH_SHORT).show();
+                NetworkUtils.handleFailureError(getBaseContext(), t, "Se registro el pedido " +
+                        "exitosamente, pero Hubo un Error al subir las imagenes, actualicelas.", "UPLOAD_IMAGES");
                 finish();
             }
         });

@@ -38,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/scanButton"
+            android:layout_marginHorizontal="8dp"
             android:gravity="top|start"
             android:hint="Ingrese el Nro de Orden"
             />

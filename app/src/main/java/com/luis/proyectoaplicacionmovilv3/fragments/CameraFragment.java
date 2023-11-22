@@ -29,6 +29,7 @@ public class CameraFragment extends Fragment {
     public Uri getUri() {
         return uri;
     }
+    public boolean isImageButtonLoadDirty = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_camera, container,
@@ -110,6 +111,7 @@ public class CameraFragment extends Fragment {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         setUriInImageButtonLoad(data.getData());
+                        isImageButtonLoadDirty= true;
                     } else {
                         Toast.makeText(getContext(), "Proceso Cancelado por el Usuario",
                                 Toast.LENGTH_SHORT).show();
@@ -124,6 +126,7 @@ public class CameraFragment extends Fragment {
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         setUriInImageButtonLoad(uri);
+                        isImageButtonLoadDirty= true;
                     } else {
                         Toast.makeText(getContext(), "Proceso Cancelado por el Usuario",
                                 Toast.LENGTH_SHORT).show();

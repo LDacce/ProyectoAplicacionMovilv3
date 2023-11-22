@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.luis.proyectoaplicacionmovilv3.R;
 import com.luis.proyectoaplicacionmovilv3.models.OrderEventModel;
+import com.luis.proyectoaplicacionmovilv3.utils.DateUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -30,9 +31,16 @@ public class OrderEventListAdapter extends RecyclerView.Adapter<OrderEventListAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         OrderEventModel orderEventModel = orderEventList.get(position);
 
-        holder.createDate_text.setText(orderEventModel.getCreateDate().toString());//VERIFICAR EL
+        holder.createDate_text.setText(DateUtils.parseISODate(orderEventModel.getCreateDate().toString()));
+        //VERIFICAR EL
         // FORMATO DE LA FECHA
         holder.event_text.setText(orderEventModel.getEvent().getDescription().toUpperCase());
+
+        int eventId = orderEventModel.getEvent().getId();
+        if (eventId == 1 || eventId == 2) {
+            holder.editButton.setVisibility(View.GONE);
+            holder.deleteButton.setVisibility(View.GONE);
+        }
     }
     @Override
     public int getItemCount() {
@@ -40,12 +48,13 @@ public class OrderEventListAdapter extends RecyclerView.Adapter<OrderEventListAd
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView createDate_text, event_text;
+        ImageView editButton, deleteButton;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             createDate_text = itemView.findViewById(R.id.createDate_text);
             event_text = itemView.findViewById(R.id.event_text);
-            ImageView editButton = itemView.findViewById(R.id.onEditButton);
-            ImageView deleteButton = itemView.findViewById(R.id.onDeleteButton);
+            editButton = itemView.findViewById(R.id.onEditButton);
+            deleteButton = itemView.findViewById(R.id.onDeleteButton);
             editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -85,6 +94,14 @@ public class OrderEventListAdapter extends RecyclerView.Adapter<OrderEventListAd
         orderEventList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, orderEventList.size());
+    }
+    public int getPosition(String orderEventId) {
+        for (int i = 0; i < orderEventList.size(); i++) {
+            if (orderEventList.get(i).getID().equals(orderEventId)) {
+                return i;
+            }
+        }
+        return -1; // Si no se encuentra el evento, devuelve -1
     }
     public interface OnItemClickListener {
         void onEditClick(int position);

@@ -1,5 +1,9 @@
 package com.luis.proyectoaplicacionmovilv3;
 
+
+import static com.luis.proyectoaplicacionmovilv3.utils.NetworkUtils.handleFailureError;
+import static com.luis.proyectoaplicacionmovilv3.utils.NetworkUtils.handleResponseError;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -67,16 +71,12 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra(InformationActivity.ORDER_EXTRA, order);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(getBaseContext(), "Sucedio un error al obtener el Pedido",
-                            Toast.LENGTH_SHORT).show();
+                    handleResponseError(getBaseContext(), response, "Sucedio un error al obtener el Pedido.", "GET_ORDER_ERROR");
                 }
             }
             @Override
             public void onFailure(Call<OrderModel> call, Throwable t) {
-                Toast.makeText(getBaseContext(),
-                        "Sucedio un error al obtener el Pedido. ERROR: " +t.getMessage(),
-                        Toast.LENGTH_SHORT).show();
-                Log.e("GET_ORDER_ERROR", t.toString());
+                handleFailureError(getBaseContext(), t, "Sucedio un error al obtener el Pedido.","GET_ORDER_ERROR");
             }
         });
     }
@@ -93,16 +93,13 @@ public class MainActivity extends AppCompatActivity {
                             android.R.layout.select_dialog_item,companyList);
                     companySpinner.setAdapter(companyListAdapter);
                 } else {
-                    Toast.makeText(getBaseContext(), "Error al obtener la lista de empresas",
-                            Toast.LENGTH_SHORT).show();
+                    handleResponseError(getBaseContext(), response, "Error al obtener la lista de" +
+                            " empresas.", "GET_COMPANY_LIST");
                 }
             }
             @Override
             public void onFailure(Call<List<CompanyModel>> call, Throwable t) {
-                Toast.makeText(getBaseContext(), "Error al obtener la lista de empresas",
-                        Toast.LENGTH_SHORT).show();
-                Log.e("GET_COMPANY_LIST_ERROR", t.toString());
-
+                handleFailureError(getBaseContext(), t, "Error al obtener la lista de empresas.","GET_COMPANY_LIST");
             }
         });
     }
@@ -116,14 +113,14 @@ public class MainActivity extends AppCompatActivity {
                     eventListAdapter = new EventListAdapter(getBaseContext(),
                             android.R.layout.select_dialog_item,eventList); //
                 } else {
-                    Toast.makeText(getBaseContext(), "Error al obtener la lista de eventos",
-                            Toast.LENGTH_SHORT).show();
+                    handleResponseError(getBaseContext(), response, "Error al obtener la lista de" +
+                            " eventos.", "GET_EVENT_LIST");
                 }
             }
             @Override
             public void onFailure(Call<List<EventModel>> call, Throwable t) {
-                Toast.makeText(getBaseContext(), "Error al obtener la lista de eventos", Toast.LENGTH_SHORT).show();
-                Log.e("GET_EVENT_LIST_ERROR", t.toString());
+                handleFailureError(getBaseContext(), t, "Error al obtener la lista de eventos.",
+                        "GET_EVENT_LIST");
             }
         });
     }
