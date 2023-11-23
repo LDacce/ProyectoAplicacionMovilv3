@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/event_text"
         style="@style/TextViewStyle"
-        android:text="N°"/>
+        android:text=""/>
 
 
 
