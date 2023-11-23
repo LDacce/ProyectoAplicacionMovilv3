@@ -2,7 +2,65 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.ProyectoAplicacionMovilv3" parent="Theme.Material3.Light">
 
+        <item name="colorPrimary">@color/color_primary</item>
+
+        <!-- Estilos de texto personalizados cuando se escribe -->
+        <item name="android:textColorPrimary">@color/color_primary_contrast</item>
+
+        <!-- Estilos de fondo personalizados -->
+        <item name="android:windowBackground">@color/md_background_color</item>
+
+        <!-- Estilos de texto personalizados cuando no se escribe -->
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+        <item name="actionBarStyle">@style/ActionBarStyle</item>
+
+        <item name="android:spinnerItemStyle">@style/SpinnerStyle</item>
+
+
+
     </style>
-    <style name="Theme.ProyectoAplicacionMovilv3" parent="Base.Theme.ProyectoAplicacionMovilv3" />
+
+    <style name="Theme.ProyectoAplicacionMovilv3" parent="Base.Theme.ProyectoAplicacionMovilv3"/>
+        <!-- Estilos de fondo personalizados -->
+
+
+    <!-- Estilo personalizado para TextView -->
+    <style name="TextViewStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/color_primary_contrast</item>
+    </style>
+
+    <!-- Estilo personalizado para RelativeLayout -->
+    <style name="RelativeLayoutStyle">
+        <item name="android:background">@color/md_color_step_200</item>
+    </style>
+
+
+    <!-- Estilo personalizado para Spinner -->
+    <style name="SpinnerStyle" >
+        <item name="android:background">@color/md_color_step_200</item>
+        <item name="android:textColor">@color/color_primary_contrast</item>
+
+    </style>
+
+
+    <!-- Estilo personalizado para Recyclerview -->
+    <style name="RecyclerViewStyle" >
+        <!-- Personalizaciones del Recyclerview -->
+        <item name="android:background">@color/md_color_step_200</item>
+        <!-- Agrega más personalizaciones según tus necesidades -->
+    </style>
+
+    <!-- Estilo personalizado para Editext -->
+    <style name="EditTextStyle" >
+        <item name="android:textColorHint">@color/color_primary_contrast</item>
+    </style>
+
+    <!-- Estilo personalizado para ActionBar -->
+    <style name="ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/color_primary</item>
+        <item name="background">@color/color_primary</item>
+    </style>
+
+
 
 </resources>

@@ -5,13 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ManagementActivity"
+
     >
     <!-- ComboBox -->
     <Spinner
         android:id="@+id/eventsComboBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/SpinnerStyle"
         android:padding="8dp"/>
+
 
     <!-- TextArea -->
     <RelativeLayout
@@ -19,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/eventsComboBox"
+        style="@style/RelativeLayoutStyle"
         android:orientation="horizontal">
         <EditText
             android:id="@+id/observationTextArea"
@@ -28,6 +32,7 @@
             android:hint="Ingresa algunas observaciones"
             android:inputType="textMultiLine"
             android:lines="6"
+            style="@style/EditTextStyle"
             android:scrollbars="vertical"
             android:gravity="top|start" />
 

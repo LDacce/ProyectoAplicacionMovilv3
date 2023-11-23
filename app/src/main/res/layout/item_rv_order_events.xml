@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:layout_gravity="bottom"
+        style="@style/TextViewStyle"
         android:text="Evento del Pedido"/>
 
     <TextView
@@ -19,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/event_text"
+        style="@style/TextViewStyle"
         android:text="N° xxxxxxx"/>
 
 

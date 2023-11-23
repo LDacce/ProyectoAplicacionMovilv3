@@ -40,6 +40,7 @@
             android:layout_below="@id/scanButton"
             android:layout_marginHorizontal="8dp"
             android:gravity="top|start"
+            style="@style/EditTextStyle"
             android:hint="Ingrese el Nro de Orden"
             />
         <Spinner
@@ -47,6 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_below="@+id/orderNumberEditText"
+            android:shadowColor="@color/color_primary_contrast"
+            style="@style/SpinnerStyle"
             android:padding="8dp" />
 
         <Button
@@ -55,7 +58,9 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:layout_below="@id/companySpinner"
-            android:text="VER INFORMACION DEL PEDIDO"></Button>
+            android:text="VER INFORMACION DEL PEDIDO">
+
+        </Button>
 
 
     </RelativeLayout>
