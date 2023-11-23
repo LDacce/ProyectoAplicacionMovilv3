@@ -5,4 +5,8 @@
     </style>
     <style name="Theme.ProyectoAplicacionMovilv3" parent="Base.Theme.ProyectoAplicacionMovilv3" />
 
+
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@mipmap/ic_splash_logo_banner</item>
+    </style>
 </resources>

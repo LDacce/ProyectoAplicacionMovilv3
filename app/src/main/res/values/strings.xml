@@ -1,21 +1,5 @@
 <resources>
-    <string name="app_name">ProyectoAplicacionMovilv3</string>
-
-    <string-array name="datos_spinner_empresa">
-        <item>Empresa</item>
-        <item>NATURA</item>
-        <item>MARY KAY</item>
-        <item>ZONIA</item>
-        <item>BELCORP</item>
-        <item>BE ZIFRAH</item>
-        <item>BAGUES</item>
-        <item>TU CALZADO</item>
-    </string-array>
-
-
-
-
+    <string name="app_name">TransolyferGoPlus</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
 </resources>

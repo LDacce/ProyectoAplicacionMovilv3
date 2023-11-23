@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class DateUtils {
+public class DateUtil {
     public static String parseISODate(String isoDate) {
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMMM yyyy, hh:mm a", Locale.getDefault());

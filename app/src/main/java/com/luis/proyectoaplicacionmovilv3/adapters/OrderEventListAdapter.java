@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.luis.proyectoaplicacionmovilv3.R;
 import com.luis.proyectoaplicacionmovilv3.models.OrderEventModel;
-import com.luis.proyectoaplicacionmovilv3.utils.DateUtils;
+import com.luis.proyectoaplicacionmovilv3.utils.DateUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -31,15 +31,16 @@ public class OrderEventListAdapter extends RecyclerView.Adapter<OrderEventListAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         OrderEventModel orderEventModel = orderEventList.get(position);
 
-        holder.createDate_text.setText(DateUtils.parseISODate(orderEventModel.getCreateDate().toString()));
-        //VERIFICAR EL
-        // FORMATO DE LA FECHA
+        holder.createDate_text.setText(DateUtil.parseISODate(orderEventModel.getCreateDate().toString()));
         holder.event_text.setText(orderEventModel.getEvent().getDescription().toUpperCase());
 
         int eventId = orderEventModel.getEvent().getId();
         if (eventId == 1 || eventId == 2) {
             holder.editButton.setVisibility(View.GONE);
             holder.deleteButton.setVisibility(View.GONE);
+        } else {
+            holder.editButton.setVisibility(View.VISIBLE);
+            holder.deleteButton.setVisibility(View.VISIBLE);
         }
     }
     @Override

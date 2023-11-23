@@ -1,24 +1,29 @@
 package com.luis.proyectoaplicacionmovilv3;
-
-
-import static com.luis.proyectoaplicacionmovilv3.utils.NetworkUtils.handleFailureError;
-import static com.luis.proyectoaplicacionmovilv3.utils.NetworkUtils.handleResponseError;
-
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 import com.luis.proyectoaplicacionmovilv3.adapters.CompanyListAdapter;
 import com.luis.proyectoaplicacionmovilv3.adapters.EventListAdapter;
 import com.luis.proyectoaplicacionmovilv3.api.MasterApiClient;
 import com.luis.proyectoaplicacionmovilv3.api.OrderApiClient;
 import com.luis.proyectoaplicacionmovilv3.databinding.ActivityMainBinding;
+import com.luis.proyectoaplicacionmovilv3.fragments.BarChartFragment;
+import com.luis.proyectoaplicacionmovilv3.fragments.CameraFragment;
 import com.luis.proyectoaplicacionmovilv3.models.CompanyModel;
 import com.luis.proyectoaplicacionmovilv3.models.EventModel;
 import com.luis.proyectoaplicacionmovilv3.models.OrderModel;
+import com.luis.proyectoaplicacionmovilv3.utils.NetworkUtil;
+import com.luis.proyectoaplicacionmovilv3.utils.ProgressDialogUtil;
+
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     public static EventListAdapter eventListAdapter;
     public static CompanyListAdapter companyListAdapter;
+    private ActivityResultLauncher<ScanOptions> barcodeLauncher;
+    ScanOptions scanOptions;
+    private BarChartFragment barChartFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +45,12 @@ public class MainActivity extends AppCompatActivity {
 
         loadCompanies();
         loadEvents();
+        configBarChartFragment();
+
 
         Button onSubmitButton = findViewById(R.id.onSubmit);
+        Button onScanButton = findViewById(R.id.scanButton);
+
         onSubmitButton.setOnClickListener( v -> {
             Spinner companiesSpinner = findViewById(R.id.companySpinner);
             CompanyModel companySelected = (CompanyModel) companiesSpinner.getSelectedItem();
@@ -55,9 +68,26 @@ public class MainActivity extends AppCompatActivity {
             }
             getOrder(orderNumber, companyId);
         });
+        onScanButton.setOnClickListener(v -> {
+            initScan();
+        });
+        barcodeLauncher = registerForActivityResult(new ScanContract(), result -> {
+            if (result.getContents() == null){
+                Toast.makeText(this, "Proceso del Scan Cancelado", Toast.LENGTH_SHORT).show();
+            } else {
+                binding.orderNumberEditText.setText(result.getContents());
+            }
+        });
     }
-
+    private void configBarChartFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        barChartFragment = BarChartFragment.newInstance("Charts");
+        fragmentTransaction.add(R.id.fragmentBarchatContainer, barChartFragment);
+        fragmentTransaction.commit();
+    }
     private void getOrder(String orderNumber, int companyId){
+        ProgressDialogUtil.showProgressDialog(MainActivity.this, "Obteniendo Pedido...");
         OrderApiClient.OrderService orderService = OrderApiClient.getInstance().getService();
         Call<OrderModel> call = orderService.getOrder("",
                 orderNumber,
@@ -65,18 +95,20 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<OrderModel>() {
             @Override
             public void onResponse(Call<OrderModel> call, Response<OrderModel> response) {
+                ProgressDialogUtil.dismissProgressDialog();
                 if (response.isSuccessful()) {
                     OrderModel order = response.body();
                     Intent intent = new Intent(MainActivity.this, InformationActivity.class);
                     intent.putExtra(InformationActivity.ORDER_EXTRA, order);
                     startActivity(intent);
                 } else {
-                    handleResponseError(getBaseContext(), response, "Sucedio un error al obtener el Pedido.", "GET_ORDER_ERROR");
+                    NetworkUtil.handleResponseError(MainActivity.this, response);
                 }
             }
             @Override
             public void onFailure(Call<OrderModel> call, Throwable t) {
-                handleFailureError(getBaseContext(), t, "Sucedio un error al obtener el Pedido.","GET_ORDER_ERROR");
+                ProgressDialogUtil.dismissProgressDialog();
+                NetworkUtil.handleFailureError(MainActivity.this, t);
             }
         });
     }
@@ -93,13 +125,12 @@ public class MainActivity extends AppCompatActivity {
                             android.R.layout.select_dialog_item,companyList);
                     companySpinner.setAdapter(companyListAdapter);
                 } else {
-                    handleResponseError(getBaseContext(), response, "Error al obtener la lista de" +
-                            " empresas.", "GET_COMPANY_LIST");
+                    NetworkUtil.handleResponseError(MainActivity.this, response);
                 }
             }
             @Override
             public void onFailure(Call<List<CompanyModel>> call, Throwable t) {
-                handleFailureError(getBaseContext(), t, "Error al obtener la lista de empresas.","GET_COMPANY_LIST");
+                NetworkUtil.handleFailureError(MainActivity.this, t);
             }
         });
     }
@@ -113,15 +144,27 @@ public class MainActivity extends AppCompatActivity {
                     eventListAdapter = new EventListAdapter(getBaseContext(),
                             android.R.layout.select_dialog_item,eventList); //
                 } else {
-                    handleResponseError(getBaseContext(), response, "Error al obtener la lista de" +
-                            " eventos.", "GET_EVENT_LIST");
+                    NetworkUtil.handleResponseError(MainActivity.this, response);
                 }
             }
             @Override
             public void onFailure(Call<List<EventModel>> call, Throwable t) {
-                handleFailureError(getBaseContext(), t, "Error al obtener la lista de eventos.",
-                        "GET_EVENT_LIST");
+                NetworkUtil.handleFailureError(MainActivity.this, t);
             }
         });
+    }
+
+    private void initScan(){
+        if (scanOptions == null) {
+            scanOptions = new ScanOptions();
+            scanOptions.setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES);
+            scanOptions.setPrompt("Scanee el Codigo del Pedido");
+            scanOptions.setCameraId(0);
+            scanOptions.setOrientationLocked(false);
+            scanOptions.setBeepEnabled(true);
+            scanOptions.setCaptureActivity(CaptureActivityPortraint.class);
+            scanOptions.setBarcodeImageEnabled(false);
+        }
+        barcodeLauncher.launch(scanOptions);
     }
 }

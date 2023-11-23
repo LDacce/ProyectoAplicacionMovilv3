@@ -12,8 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
 
 public class MasterApiClient {
-
-
+    String apiUrl = "https://transolyback-production-fe0e.up.railway.app/api/";
     public interface MasterService {
         @GET("masters/listEvents")
         Call<List<EventModel>> getEventList();
@@ -21,14 +20,11 @@ public class MasterApiClient {
         @GET("masters/listCompanies")
         Call<List<CompanyModel>> getCompanyList();
     }
-
     private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://transolyback-production.up.railway.app/api/")
+            .baseUrl(apiUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
-
     private MasterService service;
-
     private static final MasterApiClient ourInstance = new MasterApiClient();
     public static MasterApiClient getInstance() {
         return ourInstance;

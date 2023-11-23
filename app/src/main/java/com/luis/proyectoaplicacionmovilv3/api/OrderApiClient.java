@@ -15,6 +15,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
 public class OrderApiClient {
+    String apiUrl = "https://transolyback-production-fe0e.up.railway.app/api/";
     public interface OrderService {
         @Headers("Cache-Control: no-cache")
         @GET("orders/getOne")
@@ -23,10 +24,9 @@ public class OrderApiClient {
                                   @Query("companyId") int companyId);
     }
     private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://transolyback-production.up.railway.app/api/")
+            .baseUrl(apiUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
-
     private OrderApiClient.OrderService service;
 
     private static final OrderApiClient ourInstance = new OrderApiClient();

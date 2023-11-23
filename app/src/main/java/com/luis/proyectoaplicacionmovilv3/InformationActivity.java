@@ -3,10 +3,10 @@ package com.luis.proyectoaplicacionmovilv3;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
@@ -18,7 +18,8 @@ import com.luis.proyectoaplicacionmovilv3.api.OrderEventApiClient;
 import com.luis.proyectoaplicacionmovilv3.models.OrderEventModel;
 import com.luis.proyectoaplicacionmovilv3.adapters.OrderEventListAdapter;
 import com.luis.proyectoaplicacionmovilv3.models.OrderModel;
-import com.luis.proyectoaplicacionmovilv3.utils.NetworkUtils;
+import com.luis.proyectoaplicacionmovilv3.utils.NetworkUtil;
+import com.luis.proyectoaplicacionmovilv3.utils.ProgressDialogUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,7 +29,6 @@ public class InformationActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     public static OrderEventListAdapter orderEventsAdapter;
     OrderModel order;
-
     public static String ORDER_EXTRA = "ORDER_EXTRA";
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +56,7 @@ public class InformationActivity extends AppCompatActivity {
             }
         });
         Button onCreateButton = findViewById(R.id.onCreateButton);
+        ImageView onInitMapBtn = findViewById(R.id.onInitMap);
         onCreateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +66,13 @@ public class InformationActivity extends AppCompatActivity {
                 intent.putExtra(ManagementActivity.MANAGMENT_ACTION_EXTRA, "CREATE");
                 startActivity(intent);
             }
+        });
+        onInitMapBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(InformationActivity.this, GoogleMapActivity.class);
+            intent.putExtra(GoogleMapActivity.LATITUDE_EXTRA, order.getLatitude());
+            intent.putExtra(GoogleMapActivity.LONGITUDE_EXTRA, order.getLongitude());
+
+            startActivity(intent);
         });
     }
 
@@ -86,7 +94,6 @@ public class InformationActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
-
     private void loadConsultantInfo(){
         TextView consultantTextView = findViewById(R.id.consultant_edit);
         consultantTextView.setText(order.getConsultantName());
@@ -123,10 +130,13 @@ public class InformationActivity extends AppCompatActivity {
                 .show();
     }
     private void onDeleteOrder(String id, int position) {
+        ProgressDialogUtil.showProgressDialog(InformationActivity.this, "Eliminando Evento del " +
+                "Pedido...");
         OrderEventApiClient.OrderEventService service = OrderEventApiClient.getInstance().getService();
         service.deleteOrderEvent(id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
+                ProgressDialogUtil.dismissProgressDialog();
                 if (response.isSuccessful()) {
                     Toast.makeText(getBaseContext(),
                             "Se elimino el evento del pedido N°: " + order.getOrderNumber() + " " +
@@ -134,16 +144,13 @@ public class InformationActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     orderEventsAdapter.removeOrderEvent(position);
                 } else {
-                    NetworkUtils.handleResponseError(getBaseContext(), response, "Error al " +
-                            "eliminar el evento." +
-                            " del pedido.", "DELETE_ORDER_EVENT" );
+                    NetworkUtil.handleResponseError(InformationActivity.this, response);
                 }
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                NetworkUtils.handleFailureError(getBaseContext(), t, "Error al " +
-                        "eliminar el evento." +
-                        " del pedido.", "DELETE_ORDER_EVENT" );
+                ProgressDialogUtil.dismissProgressDialog();
+                NetworkUtil.handleFailureError(InformationActivity.this, t);
             }
         });
     }

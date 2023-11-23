@@ -1,55 +1,35 @@
 package com.luis.proyectoaplicacionmovilv3;
-
-import static com.luis.proyectoaplicacionmovilv3.utils.ImageUtils.*;
-
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.luis.proyectoaplicacionmovilv3.adapters.EventListAdapter;
-import com.luis.proyectoaplicacionmovilv3.adapters.OrderEventListAdapter;
-import com.luis.proyectoaplicacionmovilv3.api.MasterApiClient;
-
 import com.luis.proyectoaplicacionmovilv3.api.OrderEventApiClient;
 import com.luis.proyectoaplicacionmovilv3.dtos.CreateOrderEventDto;
 import com.luis.proyectoaplicacionmovilv3.dtos.UpdateOrderEventDto;
 import com.luis.proyectoaplicacionmovilv3.fragments.CameraFragment;
 import com.luis.proyectoaplicacionmovilv3.models.EventModel;
 import com.luis.proyectoaplicacionmovilv3.models.OrderEventModel;
-import com.luis.proyectoaplicacionmovilv3.utils.ImageUtils;
-import com.luis.proyectoaplicacionmovilv3.utils.NetworkUtils;
+import com.luis.proyectoaplicacionmovilv3.utils.ImageUtil;
+import com.luis.proyectoaplicacionmovilv3.utils.NetworkUtil;
+import com.luis.proyectoaplicacionmovilv3.utils.ProgressDialogUtil;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
+import com.squareup.picasso.Target;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -67,6 +47,9 @@ public class ManagementActivity extends AppCompatActivity {
     EditText observationsTextArea;
     private CameraFragment mainCameraFragment;
     private CameraFragment refCameraFragment;
+
+    private Target targetMainImage;
+    private Target targetReferenceImage;
 
     public static String ORDER_ID_EXTRA = "ORDER_ID_EXTRA";
     public static String ORDER_NUMBER_EXTRA = "ORDER_NUMBER_EXTRA";
@@ -95,10 +78,45 @@ public class ManagementActivity extends AppCompatActivity {
                     true);
             observationsTextArea.setText(orderEvent.getObservations());
             if (orderEvent.getMainImageURL() != null && !orderEvent.getMainImageURL().equals("")) {
-                mainCameraFragment.setUriInImageButtonLoad(Uri.parse(orderEvent.getMainImageURL()));
+                targetMainImage = new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        mainCameraFragment.setBitmapInImageButtonLoad(bitmap);
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                        Log.d("ERROR_BITMAP", errorDrawable.toString());
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        // Indicador de carga mientras se obtiene el Bitmap
+                    }
+                };
+                String mainImageUrl = orderEvent.getMainImageURL() + "?random=" + Math.random();
+                Picasso.get().load(mainImageUrl).networkPolicy(NetworkPolicy.NO_CACHE).into(targetMainImage);
             }
             if (orderEvent.getReferenceImageURL() != null && !orderEvent.getReferenceImageURL().equals("")) {
-                refCameraFragment.setUriInImageButtonLoad(Uri.parse(orderEvent.getReferenceImageURL()));
+
+                targetReferenceImage = new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        refCameraFragment.setBitmapInImageButtonLoad(bitmap);
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                        Log.d("ERROR_BITMAP", errorDrawable.toString());
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        // Indicador de carga mientras se obtiene el Bitmap
+                    }
+                };
+                String refImageUrl = orderEvent.getReferenceImageURL() + "?random=" + Math.random();
+                Picasso.get().load(refImageUrl).networkPolicy(NetworkPolicy.NO_CACHE).into(targetReferenceImage);
             }
         }
         Button submitButton = findViewById(R.id.submitButton);
@@ -126,6 +144,37 @@ public class ManagementActivity extends AppCompatActivity {
         });
     }
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ProgressDialogUtil.dismissProgressDialog();
+        Log.d("MANAGMENT_ACTIVITY", "SE DESTRUYO LA ACTIVIDAD");
+        if (targetMainImage != null){
+            Picasso.get().cancelRequest(targetMainImage);
+            targetMainImage=null;
+        }
+        if (targetReferenceImage != null) {
+            Picasso.get().cancelRequest(targetReferenceImage);
+            targetReferenceImage=null;
+        }
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("orderId", orderId);
+        outState.putString("orderNumber", orderNumber);
+        outState.putString("managmentAction", managmentAction);
+        outState.putSerializable("orderEvent", orderEvent);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        orderId = savedInstanceState.getString("orderId");
+        orderNumber = savedInstanceState.getString("orderNumber");
+        managmentAction = savedInstanceState.getString("managmentAction");
+        orderEvent = (OrderEventModel) savedInstanceState.getSerializable("orderEvent");
+    }
+    @Override
     public boolean onSupportNavigateUp() {
         finish();
         return true;
@@ -140,7 +189,6 @@ public class ManagementActivity extends AppCompatActivity {
             textView.setText("Actualización de Evento del Pedido N° "+orderNumber);
         }
         textView.setTextSize(18);
-        //textView.setTextColor(ContextCompat.getColor(this, R.color.md_text_color));
         textView.setGravity(Gravity.LEFT);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(textView);
@@ -149,12 +197,8 @@ public class ManagementActivity extends AppCompatActivity {
     private void configCameraFragments() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        // Crear una nueva instancia de CameraFragment con texto predeterminado
         mainCameraFragment = CameraFragment.newInstance("Foto de Cargo");
         fragmentTransaction.add(R.id.fragment_container_main, mainCameraFragment);
-
-        // Crear una nueva instancia de CameraFragment con texto predeterminado
         refCameraFragment = CameraFragment.newInstance("Foto Referencial");
         fragmentTransaction.add(R.id.fragment_container_ref, refCameraFragment);
 
@@ -174,12 +218,12 @@ public class ManagementActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
             return false;
         }
-            if (mainCameraFragment.getUri() == null){
+            if (mainCameraFragment.getBitmap() == null){
                 Toast.makeText(getBaseContext(), "Ingrese una Foto de Cargo",
                         Toast.LENGTH_SHORT).show();
                 return false;
             }
-            if (refCameraFragment.getUri() == null){
+            if (refCameraFragment.getBitmap() == null){
                 Toast.makeText(getBaseContext(), "Ingrese una Foto de Referencia",
                         Toast.LENGTH_SHORT).show();
                 return false;
@@ -192,6 +236,7 @@ public class ManagementActivity extends AppCompatActivity {
         return eventsComboBox.isDirty() || observationsTextArea.isDirty() || mainCameraFragment.isImageButtonLoadDirty || refCameraFragment.isImageButtonLoadDirty;
     }
     public void onCreateOrder() {
+        ProgressDialogUtil.showProgressDialog(ManagementActivity.this, "Creando Pedido...");
         EventModel selectedEvent = (EventModel) eventsComboBox.getSelectedItem();
         String observationText = observationsTextArea.getText().toString();
         CreateOrderEventDto dto = new CreateOrderEventDto(selectedEvent.getId(), "af6d3b8f-832d-4ae6-ab06-e83fe0a1b1c5", orderId,
@@ -207,22 +252,23 @@ public class ManagementActivity extends AppCompatActivity {
                     InformationActivity.orderEventsAdapter.addOrderEvent(orderEvent);
                     uploadFiles(orderEvent.getID());
                 } else {
-                    NetworkUtils.handleResponseError(getBaseContext(), response, "Error al crear " +
-                            "el evento del pedido", "CREATE_ORDER_EVENT");
+                    ProgressDialogUtil.dismissProgressDialog();
+                    NetworkUtil.handleResponseError(ManagementActivity.this, response);
                 }
             }
             @Override
             public void onFailure(Call<OrderEventModel> call, Throwable t) {
-                NetworkUtils.handleFailureError(getBaseContext(), t, "Error al crear " +
-                        "el evento del pedido", "CREATE_ORDER_EVENT");
+                ProgressDialogUtil.dismissProgressDialog();
+                NetworkUtil.handleFailureError(ManagementActivity.this, t);
             }
         });
     }
     public void onEditOrder() {
+        ProgressDialogUtil.showProgressDialog(ManagementActivity.this, "Editando Pedido...");
         EventModel selectedEvent = (EventModel) eventsComboBox.getSelectedItem();
         String observationText = observationsTextArea.getText().toString();
         UpdateOrderEventDto dto = new UpdateOrderEventDto(selectedEvent.getId(),
-                orderEvent.getUser().getID(),
+                "af6d3b8f-832d-4ae6-ab06-e83fe0a1b1c5",
                 orderId,
                 observationText, orderEvent.getMainImageURL(), orderEvent.getReferenceImageURL(),
                 "", "");
@@ -238,27 +284,32 @@ public class ManagementActivity extends AppCompatActivity {
                     InformationActivity.orderEventsAdapter.editOrderEvent(position, orderEvent);
                     uploadFiles(orderEvent.getID());
                 } else {
-                    NetworkUtils.handleResponseError(getBaseContext(), response, "Error al editar el evento del pedido", "EDIT_ORDER_EVENT");
+                    ProgressDialogUtil.dismissProgressDialog();
+                    NetworkUtil.handleResponseError(ManagementActivity.this, response);
                 }
             }
             @Override
             public void onFailure(Call<OrderEventModel> call, Throwable t) {
-                NetworkUtils.handleFailureError(getBaseContext(), t, "Error al editar el evento " +
-                        "del pedido", "EDIT_ORDER_EVENT");
+                ProgressDialogUtil.dismissProgressDialog();
+                NetworkUtil.handleFailureError(ManagementActivity.this, t);
             }
         });
     }
 
     private void uploadFiles(String orderEventId){
         OrderEventApiClient.OrderEventService service = OrderEventApiClient.getInstance().getService();
-        MultipartBody.Part mainImgPart = convertUriToMultipartBodyPart(mainCameraFragment.getUri(), "mainImage");
+        MultipartBody.Part mainImgPart =
+                ImageUtil.convertBitmapToMultipartBodyPart(mainCameraFragment.getBitmap(), "mainImage");
 
-        MultipartBody.Part refImgPart = convertUriToMultipartBodyPart(refCameraFragment.getUri(), "referenceImage");
+        MultipartBody.Part refImgPart =
+                ImageUtil.convertBitmapToMultipartBodyPart(refCameraFragment.getBitmap()
+                , "referenceImage");
 
         Call<OrderEventModel> call = service.uploadEventImages(orderEventId, mainImgPart, refImgPart);
         call.enqueue(new Callback<OrderEventModel>() {
             @Override
             public void onResponse(Call<OrderEventModel> call, Response<OrderEventModel> response) {
+                ProgressDialogUtil.dismissProgressDialog();
                 if (response.isSuccessful()) {
                     OrderEventModel orderEvent = response.body();
                     int position =
@@ -267,14 +318,14 @@ public class ManagementActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "Se registro el pedido exitosamente",
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    NetworkUtils.handleResponseError(getBaseContext(), response, "Se registro el pedido exitosamente, pero Hubo un Error al subir las imagenes, actualicelas.", "UPLOAD_IMAGES");
+                    NetworkUtil.handleResponseError(ManagementActivity.this, response);
                 }
                 finish();
             }
             @Override
             public void onFailure(Call<OrderEventModel> call, Throwable t) {
-                NetworkUtils.handleFailureError(getBaseContext(), t, "Se registro el pedido " +
-                        "exitosamente, pero Hubo un Error al subir las imagenes, actualicelas.", "UPLOAD_IMAGES");
+                ProgressDialogUtil.dismissProgressDialog();
+                NetworkUtil.handleFailureError(ManagementActivity.this, t);
                 finish();
             }
         });

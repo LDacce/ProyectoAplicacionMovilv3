@@ -21,6 +21,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public class OrderEventApiClient {
+    String apiUrl = "https://transolyback-production-fe0e.up.railway.app/api/";
     public interface OrderEventService {
         @Headers("Cache-Control: no-cache")
         @POST("order-events")
@@ -39,7 +40,7 @@ public class OrderEventApiClient {
     }
 
     private final Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://transolyback-production.up.railway.app/api/")
+            .baseUrl(apiUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
