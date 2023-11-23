@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -189,6 +190,7 @@ public class ManagementActivity extends AppCompatActivity {
             textView.setText("Actualización de Evento del Pedido N° "+orderNumber);
         }
         textView.setTextSize(18);
+        textView.setTextColor(ContextCompat.getColor(this, R.color.md_text_color));
         textView.setGravity(Gravity.LEFT);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(textView);

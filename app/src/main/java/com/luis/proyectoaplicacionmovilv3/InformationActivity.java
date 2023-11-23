@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.luis.proyectoaplicacionmovilv3.api.OrderEventApiClient;
@@ -87,7 +88,7 @@ public class InformationActivity extends AppCompatActivity {
         TextView textView = new TextView(this);
         textView.setText("Informacion del Pedido N° " + order.getOrderNumber());
         textView.setTextSize(18);
-        //textView.setTextColor(ContextCompat.getColor(this, R.color.md_text_color));
+        textView.setTextColor(ContextCompat.getColor(this, R.color.md_text_color));
         textView.setGravity(Gravity.LEFT);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(textView);

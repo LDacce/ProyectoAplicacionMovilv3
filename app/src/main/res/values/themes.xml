@@ -62,8 +62,6 @@
     </style>
 
 
-
-
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@mipmap/ic_splash_logo_banner</item>
     </style>
